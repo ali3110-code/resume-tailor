@@ -280,7 +280,7 @@ ${suggestions.general_suggestions.join(", ")}
 
               {/* General Suggestions */}
               <div>
-                <h2 className="text-2xl sm:text-3xl md:text-4xl font-extrabold text-cyan-300 mb-3">
+                <h2 className="text-2xl sm:text-3xl md:text-3xl font-extrabold text-cyan-300 mb-3">
                   General Suggestions
                 </h2>
 
