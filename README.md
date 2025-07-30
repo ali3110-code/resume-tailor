@@ -21,8 +21,8 @@
 
 - `/login` – Magic link login page
 - `/home` – Welcome/intro screen
-- `/dashboard` – View uploaded resumes and suggestions
-- `/upload` – Upload resume & get tailored suggestions
+- `/dashboard` – View uploaded suggestions
+- `/upload` – Upload resume & job description to get tailored suggestions
 
 ---
 
