@@ -20,7 +20,7 @@ interface ParsedSuggestion {
 }
 
 export default function Dashboard() {
-  const [showClose, setShowClose] = useState(false);
+  const [collapse, setCollapse] = useState(false);
   const [firstName, setFirstName] = useState("");
   const [parsedSuggestions, setParsedSuggestions] = useState<
     ParsedSuggestion[]
@@ -45,7 +45,7 @@ export default function Dashboard() {
     };
 
     fetchUserName();
-  });
+  }, [router]);
 
   const parseSuggestionText = (text: string): { [key: string]: string } => {
     const sections: { [key: string]: string } = {};
@@ -95,8 +95,14 @@ export default function Dashboard() {
         sections: parseSuggestionText(s.suggestion_text),
       }));
       setParsedSuggestions(parsed);
-      setShowClose(true);
     }
+  };
+
+  const toggleCollapse = () => {
+    if (!collapse && parsedSuggestions.length === 0) {
+      fetchUserAndSuggestions();
+    }
+    setCollapse(!collapse);
   };
 
   const generatePDF = (suggestion: ParsedSuggestion) => {
@@ -144,10 +150,7 @@ export default function Dashboard() {
     const safeJob = suggestion.job_title.replace(/\s+/g, "_");
     doc.save(`${safeName}-${safeJob}.pdf`);
   };
-  const clearCard = () => {
-    setShowClose(false);
-    setParsedSuggestions([]);
-  };
+
   return (
     <>
       <Navbar />
@@ -161,7 +164,7 @@ export default function Dashboard() {
           </h2>
 
           <p className="text-slate-400 text-center mb-10">
-            This is your dashboard.
+            This is your personalized dashboard.
           </p>
 
           <div className="flex flex-col gap-6">
@@ -175,41 +178,42 @@ export default function Dashboard() {
                 description.
               </p>
               <Link href="/uploadResume">
-                <Button className="bg-gradient-to-r from-indigo-500 to-purple-500 text-white hover:scale-105 hover:shadow-xl transition-all duration-300">
+                <Button className="bg-gradient-to-r from-indigo-500 to-purple-500 text-white hover:cursor-pointer hover:scale-105 hover:shadow-xl transition-all duration-300">
                   Upload Now
                 </Button>
               </Link>
             </div>
 
             {/* Saved Suggestions */}
-            <div className="relative bg-black border border-indigo-500/50 p-6 rounded-2xl hover:shadow-xl hover:border-indigo-400 transition-all">
-              {/* Close Button */}
-              {showClose && (
+            <div className="flex flex-col relative bg-black border border-indigo-500/50 p-6 rounded-2xl hover:shadow-xl hover:border-indigo-400 transition-all">
+              <div className="flex items-center justify-between mb-4">
+                <div>
+                  <h3 className="text-xl font-semibold text-slate-100">
+                    📄 Saved Suggestions
+                  </h3>
+                  <p className="text-slate-400 text-sm mt-2">
+                    Download your previous resume suggestions as PDF files.
+                  </p>
+                </div>
+
                 <button
-                  onClick={clearCard}
-                  className="absolute top-3 right-3 text-red-600 hover:text-white text-lg font-bold"
-                  aria-label="Close Saved Suggestions"
+                  onClick={toggleCollapse}
+                  className={`text-2xl text-indigo-400 hover:text-indigo-300 transform transition-transform duration-300 ${
+                    collapse ? "rotate-180" : "rotate-90"
+                  }`}
+                  aria-label="Toggle Suggestions"
                 >
-                  ×
+                  ▲
                 </button>
-              )}
+              </div>
 
-              <h3 className="text-xl font-semibold mb-2 text-slate-100">
-                📄 Saved Suggestions
-              </h3>
-              <p className="text-slate-400 text-sm mb-4">
-                Download your previous resume suggestions as PDF files.
-              </p>
-
-              {parsedSuggestions.length === 0 ? (
-                <Button
-                  onClick={fetchUserAndSuggestions}
-                  className="bg-gradient-to-r from-indigo-500 to-purple-500 text-white hover:scale-105 hover:shadow-xl transition-all duration-300"
-                >
-                  View Saved
-                </Button>
-              ) : (
-                <div className="space-y-6 max-h-[500px] overflow-y-auto mt-4 pr-2">
+              {/* Collapsible Content */}
+              <div
+                className={`transition-all duration-500 ease-in-out overflow-hidden ${
+                  collapse ? "max-h-[1000px] opacity-100" : "max-h-0 opacity-0"
+                }`}
+              >
+                <div className="max-h-[500px] overflow-y-auto space-y-6 mt-2 pr-2">
                   {parsedSuggestions.map((suggestion) => (
                     <div
                       key={suggestion.id}
@@ -242,7 +246,7 @@ export default function Dashboard() {
                     </div>
                   ))}
                 </div>
-              )}
+              </div>
             </div>
           </div>
         </main>

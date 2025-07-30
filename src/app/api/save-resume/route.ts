@@ -17,7 +17,7 @@ export async function POST(req: NextRequest) {
     process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
   );
 
-  // 1. Insert into resumes and get inserted resume's ID
+  // Insert into resumes table
   const { data: resumeData, error: resumeError } = await supabase
     .from("resumes")
     .insert([
@@ -27,7 +27,7 @@ export async function POST(req: NextRequest) {
         resume_text: resumeText,
       },
     ])
-    .select("id") // fetch the inserted id
+    .select("id") // I am fetching the inserted id
     .single();
 
   if (resumeError) {

@@ -23,7 +23,7 @@ export default function LoginPage() {
         return;
       }
       if (data?.session?.user) {
-        router.replace("/home");
+        router.replace("/dashboard");
       }
     };
 
@@ -81,7 +81,6 @@ export default function LoginPage() {
             priority
           />
         </div>
-
         {/* Login Form */}
         <div className="w-full h-full max-w-md">
           <form
