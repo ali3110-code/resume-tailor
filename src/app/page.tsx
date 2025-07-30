@@ -23,7 +23,7 @@ export default function LoginPage() {
         return;
       }
       if (data?.session?.user) {
-        router.replace("/dashboard");
+        router.replace("/home");
       }
     };
 
