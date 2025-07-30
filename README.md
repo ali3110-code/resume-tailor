@@ -46,4 +46,4 @@
 
 ---
 
-live demo: "";
+live demo: "https://resume-tailor-ai-based.vercel.app/";
